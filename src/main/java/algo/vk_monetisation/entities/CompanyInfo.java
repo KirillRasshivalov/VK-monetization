@@ -16,12 +16,12 @@ public class CompanyInfo {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private Integer inn;
+    private String inn;
 
     private String name;
 
     @Column(name = "ogrnip")
-    private Integer ogrnip;
+    private String ogrnip;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = false)

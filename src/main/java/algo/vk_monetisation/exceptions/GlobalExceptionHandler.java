@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO error = ErrorResponseDTO.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .message("Непредвиденная ошибка.")
+                .message("Непредвиденная ошибка: " + ex.getMessage())
                 .path(request.getDescription(false))
                 .build();
 
