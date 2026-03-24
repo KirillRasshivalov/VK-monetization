@@ -30,6 +30,7 @@ public class PersonHandler {
         person.setName(requisitesDTO.companyInfoDTO().name());
         person.setSurname(requisitesDTO.companyInfoDTO().surname());
         person.setLastName(requisitesDTO.companyInfoDTO().lastName());
+        log.debug("Лицо успешно создано");
 
         LegalEntityDTO legalEntityDTO = requisitesDTO.legalEntityDTO();
         LegalEntity legalEntity = new LegalEntity();
@@ -41,6 +42,7 @@ public class PersonHandler {
         legalEntity.setApartmentNumber(legalEntityDTO.numOfFlat());
         legalEntity.setPerson(person);
         person.setLegalEntity(legalEntity);
+        log.debug("Местоположение компании добавлено.");
 
         ContactsDTO contactsDTO = requisitesDTO.contactsDTO();
         Contacts contacts = new Contacts();
@@ -48,6 +50,7 @@ public class PersonHandler {
         contacts.setContactPerson(contactsDTO.contactPearson());
         contacts.setPerson(person);
         person.setContacts(contacts);
+        log.debug("Контакты добавлены.");
 
         CompanyInfoDTO companyInfoDTO = requisitesDTO.companyInfoDTO();
         CompanyInfo companyInfo = new CompanyInfo();
@@ -56,6 +59,7 @@ public class PersonHandler {
         companyInfo.setOgrnip(companyInfoDTO.ogrnip());
         companyInfo.setPerson(person);
         person.setCompanyInfo(companyInfo);
+        log.debug("Информация о компании добавлена.");
 
         personRepository.save(person);
     }
