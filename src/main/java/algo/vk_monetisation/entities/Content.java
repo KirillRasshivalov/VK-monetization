@@ -3,9 +3,9 @@ package algo.vk_monetisation.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
-import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "content")

@@ -6,16 +6,14 @@ import algo.vk_monetisation.dto.PosevDTO;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
 import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.entities.Person;
+import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
-import algo.vk_monetisation.exceptions.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j

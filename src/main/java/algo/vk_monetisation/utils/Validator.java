@@ -2,13 +2,10 @@ package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
-import algo.vk_monetisation.entities.Person;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

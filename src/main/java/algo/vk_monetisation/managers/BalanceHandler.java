@@ -2,7 +2,6 @@ package algo.vk_monetisation.managers;
 
 import algo.vk_monetisation.dto.WalletTopUpDTO;
 import algo.vk_monetisation.entities.Person;
-import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
