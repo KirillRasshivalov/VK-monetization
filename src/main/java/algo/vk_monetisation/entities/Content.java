@@ -2,8 +2,10 @@ package algo.vk_monetisation.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.time.LocalDateTime;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "content")
@@ -20,12 +22,10 @@ public class Content {
     @Column(name = "image_file_name")
     private String imageFileName;
 
-    @Lob
     @Column(name = "image_data", columnDefinition = "BYTEA")
     private byte[] imageData;
 
-    @Lob
-    @Column(columnDefinition = "BYTEA")
+    @Column(name = "video_data", columnDefinition = "BYTEA")
     private byte[] videoData;
 
     @Column(name = "video_content_type")
@@ -34,7 +34,9 @@ public class Content {
     @Column(name = "video_file_name")
     private String videoFileName;
 
-    @Column(columnDefinition = "jsonb")
+    // В БД: jsonb, поэтому биним как JSON тип, а не VARCHAR.
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "media_metadata", columnDefinition = "jsonb")
     private String mediaMetadata;
 
     @Column(name = "created_at")

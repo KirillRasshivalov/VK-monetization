@@ -45,7 +45,7 @@ public class AdvertisementController {
         Long views = content.getFinalViews() != null ? content.getFinalViews() : content.getViews();
         Long likes = content.getFinalLikes() != null ? content.getFinalLikes() : content.getLikes();
 
-        return ResponseEntity.ok(new ContentStatsDTO(
+        return ResponseEntity.ok().body(new ContentStatsDTO(
                 campaignId,
                 content.getId(),
                 views,
