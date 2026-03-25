@@ -66,7 +66,7 @@ public class AuthorContentService {
 
             LocalDateTime now = LocalDateTime.now();
             campaign.setStartDate(now);
-            campaign.setEndDate(now.plusMonths(1)); // месяц от текущего времени
+            campaign.setEndDate(now.plusMinutes(4)); // месяц от текущего времени
             campaign.setStatus(AdvertisingCampaign.CampaignStatus.ACTIVE);
         } else if (campaign.getStatus() == AdvertisingCampaign.CampaignStatus.ACTIVE) {
             // уже запущена

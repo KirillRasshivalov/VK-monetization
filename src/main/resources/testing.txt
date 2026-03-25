@@ -1,0 +1,55 @@
+curl -sS -X POST "$BASE_URL/register/company" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "companyInfoDTO": {
+      "INN": "770708389312",
+      "name": "Ivan",
+      "surname": "Ivanov",
+      "lastName": "Petrovich",
+      "nameOfCompany": "TestCompany LLC",
+      "ogrnip": "312345678901212"
+    },
+    "legalEntityDTO": {
+      "index": 123456,
+      "region": "Moscow",
+      "town": "Moscow",
+      "street": "Tverskaya",
+      "adress": "1",
+      "numOfFlat": 10
+    },
+    "contactsDTO": {
+      "contactPearson": "Ivan Ivanov",
+      "contactNumber": "+79123456789"
+    }
+  }'
+
+curl -sS -X POST "$BASE_URL/wallet/topup" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "personId": 1,
+    "amount": 2000
+  }'
+
+curl -sS -X POST "$BASE_URL/order/advert" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Campaign test2",
+    "description": "Test campaign description",
+    "OKVDCode": "62.01",
+    "personId": 1,
+    "budget": 1000.0,
+    "targetAudience": "developers"
+  }'
+
+
+  curl -sS "$BASE_URL/order/campaign/1"
+  {"campaignId":1,"status":"DRAFT","budget":1000.0,"startDate":"2026-03-25T10:00:00","endDate":"2026-03-25T18:00:00","personId":1}%
+
+curl -sS -o /dev/null -w "%{http_code}\n" -X POST "$BASE_URL/author/content" \
+  -F "campaignId=1" \
+  -F "image=@$IMAGE_PATH;type=image/png"
+
+curl -sS "$BASE_URL/order/campaign/1/stats"
+{"campaignId":1,"contentId":1,"views":13,"likes":2}%
+
+curl -sS "$BASE_URL/order/campaign/1"

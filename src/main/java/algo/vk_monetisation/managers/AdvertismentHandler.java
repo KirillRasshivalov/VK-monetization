@@ -39,21 +39,20 @@ public class AdvertismentHandler {
         campaign.setOkvdCode(posevDTO.OKVDCode());
         campaign.setBudget(posevDTO.budget());
         campaign.setTargetAudience(posevDTO.targetAudience());
-        campaign.setStartDate(posevDTO.startDate());
-        campaign.setEndDate(posevDTO.endDate());
         campaign.setPerson(person);
         campaign.setStatus(AdvertisingCampaign.CampaignStatus.DRAFT);
 
-        if (posevDTO.images() != null && !posevDTO.images().isEmpty()) {
-            MultipartFile mainImage = posevDTO.images().get(0);
-            if (mainImage != null && !mainImage.isEmpty()) {
-                try {
-                    campaign.setImageData(mainImage.getBytes());
-                } catch (Exception e) {
-                    throw new ValidationException("Не удалось прочитать image байты: " + e.getMessage());
-                }
-            }
-        }
+//        // Для совместимости с текущим DTO: храним только байты изображения (Content будет создан автором позже)
+//        if (posevDTO.images() != null && !posevDTO.images().isEmpty()) {
+//            MultipartFile mainImage = posevDTO.images().get(0);
+//            if (mainImage != null && !mainImage.isEmpty()) {
+//                try {
+//                    campaign.setImageData(mainImage.getBytes());
+//                } catch (Exception e) {
+//                    throw new ValidationException("Не удалось прочитать image байты: " + e.getMessage());
+//                }
+//            }
+//        }
 
         AdvertisingCampaign savedCampaign = advertisingCampaignRepository.save(campaign);
         log.info("Кампания создана: {}", savedCampaign.getId());

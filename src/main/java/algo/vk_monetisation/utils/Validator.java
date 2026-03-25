@@ -34,7 +34,6 @@ public class Validator {
     }
 
     public void validatePosev(PosevDTO posevDTO) throws ValidationException {
-        validateMediaFiles(posevDTO.images());
         validatePersonId(posevDTO.personId());
     }
 

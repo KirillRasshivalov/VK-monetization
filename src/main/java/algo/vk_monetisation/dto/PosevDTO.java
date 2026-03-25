@@ -8,12 +8,8 @@ import java.util.List;
 public record PosevDTO(
         String title,
         String description,
-        List<MultipartFile> images,
-        List<MultipartFile> videos,
         String OKVDCode,
         Long personId,
         Double budget,
-        String targetAudience,
-        LocalDateTime startDate,
-        LocalDateTime endDate
+        String targetAudience
 ) { }
