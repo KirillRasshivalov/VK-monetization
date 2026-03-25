@@ -25,6 +25,10 @@ public class Person {
 
     private String lastName;
 
+    // Баланс средств заказчика (нужен для проверки перед активацией кампании).
+    // null трактуем как 0, чтобы не ломать существующую БД при ddl-auto=update.
+    private Double balance;
+
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CompanyInfo companyInfo;
 
@@ -44,10 +48,16 @@ public class Person {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+        if (balance == null) {
+            balance = 0.0;
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+        if (balance == null) {
+            balance = 0.0;
+        }
     }
 }

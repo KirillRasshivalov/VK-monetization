@@ -2,7 +2,7 @@ package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.exceptions.ValidationException;
-import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
+import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Validator {
 
-    private final AdvertisingCampaignRepository advertisingCampaignRepository;
+    private final PersonRepository personRepository;
 
     public void validatePosev(PosevDTO posevDTO) throws ValidationException {
         validateMediaFiles(posevDTO.images());
@@ -60,6 +60,9 @@ public class Validator {
     }
 
     private void validateMediaFiles(List<MultipartFile> files) {
+        if (files == null || files.isEmpty()) {
+            return;
+        }
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             if (file == null || file.isEmpty()) {
@@ -75,7 +78,7 @@ public class Validator {
         if (personId == null) {
             throw new ValidationException("Значение ответственного за рекламную кампанию не должно быть пусто.");
         }
-        if (!advertisingCampaignRepository.existsById(personId)) {
+        if (!personRepository.existsById(personId)) {
             throw new ValidationException("Данный пользователь не может создать рекламу.");
         }
     }

@@ -17,7 +17,7 @@ public class AdvertisementService {
     private final AdvertismentHandler advertismentHandler;
 
     public void addAdvertisement(PosevDTO posevDTO)  {
-        log.info("Пришел запрос на публикацию посева.");
+        log.info("Пришел запрос на публикацию.");
         validator.validatePosev(posevDTO);
         advertismentHandler.addAdvert(posevDTO);
 

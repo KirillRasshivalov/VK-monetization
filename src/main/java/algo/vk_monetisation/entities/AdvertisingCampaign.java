@@ -14,6 +14,10 @@ public class AdvertisingCampaign {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "content_id", nullable = true)
+    private Content content;
+
     private String title;
     private String description;
 
@@ -38,24 +42,24 @@ public class AdvertisingCampaign {
     @Column(columnDefinition = "BYTEA")
     private byte[] imageData;
 
-    @Column(name = "image_content_type")
-    private String imageContentType;
-
-    @Column(name = "image_file_name")
-    private String imageFileName;
-
-    @Lob
-    @Column(columnDefinition = "BYTEA")
-    private byte[] videoData;
-
-    @Column(name = "video_content_type")
-    private String videoContentType;
-
-    @Column(name = "video_file_name")
-    private String videoFileName;
-
-    @Column(columnDefinition = "jsonb")
-    private String mediaMetadata;
+//    @Column(name = "image_content_type")
+//    private String imageContentType;
+//
+//    @Column(name = "image_file_name")
+//    private String imageFileName;
+//
+//    @Lob
+//    @Column(columnDefinition = "BYTEA")
+//    private byte[] videoData;
+//
+//    @Column(name = "video_content_type")
+//    private String videoContentType;
+//
+//    @Column(name = "video_file_name")
+//    private String videoFileName;
+//
+//    @Column(columnDefinition = "jsonb")
+//    private String mediaMetadata;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = false)
