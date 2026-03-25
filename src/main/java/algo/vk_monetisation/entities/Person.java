@@ -25,8 +25,6 @@ public class Person {
 
     private String lastName;
 
-    // Баланс средств заказчика (нужен для проверки перед активацией кампании).
-    // null трактуем как 0, чтобы не ломать существующую БД при ddl-auto=update.
     private Double balance;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

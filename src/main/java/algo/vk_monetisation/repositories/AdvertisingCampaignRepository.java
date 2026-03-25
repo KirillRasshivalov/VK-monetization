@@ -7,7 +7,5 @@ import java.util.List;
 
 public interface AdvertisingCampaignRepository extends JpaRepository<AdvertisingCampaign, Long> {
 
-//    boolean existsByCampaignId(Long campaignId);
-
     List<AdvertisingCampaign> findByStatus(AdvertisingCampaign.CampaignStatus status);
 }

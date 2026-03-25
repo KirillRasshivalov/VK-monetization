@@ -34,7 +34,6 @@ public class Content {
     @Column(name = "video_file_name")
     private String videoFileName;
 
-    // В БД: jsonb, поэтому биним как JSON тип, а не VARCHAR.
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "media_metadata", columnDefinition = "jsonb")
     private String mediaMetadata;

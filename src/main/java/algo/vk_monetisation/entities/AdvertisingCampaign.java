@@ -41,25 +41,6 @@ public class AdvertisingCampaign {
     @Column(name = "image_data", columnDefinition = "BYTEA")
     private byte[] imageData;
 
-//    @Column(name = "image_content_type")
-//    private String imageContentType;
-//
-//    @Column(name = "image_file_name")
-//    private String imageFileName;
-//
-//    @Lob
-//    @Column(columnDefinition = "BYTEA")
-//    private byte[] videoData;
-//
-//    @Column(name = "video_content_type")
-//    private String videoContentType;
-//
-//    @Column(name = "video_file_name")
-//    private String videoFileName;
-//
-//    @Column(columnDefinition = "jsonb")
-//    private String mediaMetadata;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;

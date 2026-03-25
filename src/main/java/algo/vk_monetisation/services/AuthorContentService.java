@@ -33,12 +33,9 @@ public class AuthorContentService {
         if (!hasImage && !hasVideo) {
             throw new ValidationException("Нужно передать хотя бы один файл контента (image или video).");
         }
-
         AdvertisingCampaign campaign = advertisingCampaignRepository.findById(campaignId)
                 .orElseThrow(() -> new ValidationException("Кампания не найдена: " + campaignId));
 
-        // "Запуск" кампании происходит при прикреплении контента.
-        // Перед выставлением ACTIVE проверяем баланс заказчика.
         if (campaign.getStatus() == null || campaign.getStatus() == AdvertisingCampaign.CampaignStatus.DRAFT) {
             var person = campaign.getPerson();
             if (person == null) {
@@ -60,18 +57,17 @@ public class AuthorContentService {
                 throw new ValidationException("Недостаточно средств для запуска кампании. balance=" + balance + ", required=" + required);
             }
 
-            // Списываем бюджет при запуске.
             person.setBalance(balance - required);
             personRepository.save(person);
 
             LocalDateTime now = LocalDateTime.now();
             campaign.setStartDate(now);
-            campaign.setEndDate(now.plusMinutes(4)); // месяц от текущего времени
+            campaign.setEndDate(now.plusMinutes(4));
             campaign.setStatus(AdvertisingCampaign.CampaignStatus.ACTIVE);
         } else if (campaign.getStatus() == AdvertisingCampaign.CampaignStatus.ACTIVE) {
-            // уже запущена
+
         } else {
-            // COMPLETED или REJECTED: повторный запуск запрещён
+
             throw new ValidationException("Кампания не может быть активирована в текущем статусе: " + campaign.getStatus());
         }
 
@@ -81,8 +77,6 @@ public class AuthorContentService {
             campaign.setContent(content);
         }
 
-        // При запуске статистика начинается с нуля.
-        // Если автор перезагружает контент в ACTIVE кампании, для MVP фиксируем поведение как "сброс".
         content.setLikes(0L);
         content.setViews(0L);
         content.setCreatedAt(LocalDateTime.now());
@@ -107,7 +101,7 @@ public class AuthorContentService {
             content.setVideoFileName(video.getOriginalFilename());
         }
 
-        // Для MVP сериализация медиа-метаданных не критична: статистика считает likes/views.
+
         content.setMediaMetadata(null);
 
         contentRepository.save(content);

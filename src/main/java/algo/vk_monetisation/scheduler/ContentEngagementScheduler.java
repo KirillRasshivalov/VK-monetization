@@ -26,26 +26,20 @@ public class ContentEngagementScheduler {
     @Transactional
     public void tick() {
         LocalDateTime now = LocalDateTime.now();
-
         List<AdvertisingCampaign> activeCampaigns =
                 advertisingCampaignRepository.findByStatus(AdvertisingCampaign.CampaignStatus.ACTIVE);
-
         if (activeCampaigns.isEmpty()) {
             return;
         }
-
         int incremented = 0;
         int completed = 0;
         List<Content> contentsToSave = new ArrayList<>();
-
         for (AdvertisingCampaign campaign : activeCampaigns) {
             Content content = campaign.getContent();
             if (content == null) {
                 continue;
             }
-
             if (campaign.getEndDate() != null && !campaign.getEndDate().isAfter(now)) {
-                // Кампания завершилась: фиксируем статистику и меняем статус.
                 if (content.getFinalViews() == null) {
                     content.setFinalViews(content.getViews());
                     content.setFinalLikes(content.getLikes());
@@ -56,25 +50,19 @@ public class ContentEngagementScheduler {
                 contentsToSave.add(content);
                 continue;
             }
-
-            // Кампания активна: инкрементим views и likes по правилу.
             long views = content.getViews() == null ? 0L : content.getViews();
             long likes = content.getLikes() == null ? 0L : content.getLikes();
-
             views += 1;
             if (views % 5 == 0) {
                 likes += 1;
             }
-
             content.setViews(views);
             content.setLikes(likes);
             incremented++;
             contentsToSave.add(content);
         }
-
         advertisingCampaignRepository.saveAll(activeCampaigns);
         contentRepository.saveAll(contentsToSave);
-
         log.debug("Engagement tick: incremented={}, completed={}", incremented, completed);
     }
 }

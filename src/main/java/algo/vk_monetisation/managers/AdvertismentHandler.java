@@ -32,7 +32,6 @@ public class AdvertismentHandler {
         log.info("Выполняется транзация по добавлению рекламной кампании.");
         Person person = personRepository.findById(posevDTO.personId())
                 .orElseThrow(() -> new ValidationException("Person не найден: " + posevDTO.personId()));
-
         AdvertisingCampaign campaign = new AdvertisingCampaign();
         campaign.setTitle(posevDTO.title());
         campaign.setDescription(posevDTO.description());
@@ -41,19 +40,6 @@ public class AdvertismentHandler {
         campaign.setTargetAudience(posevDTO.targetAudience());
         campaign.setPerson(person);
         campaign.setStatus(AdvertisingCampaign.CampaignStatus.DRAFT);
-
-//        // Для совместимости с текущим DTO: храним только байты изображения (Content будет создан автором позже)
-//        if (posevDTO.images() != null && !posevDTO.images().isEmpty()) {
-//            MultipartFile mainImage = posevDTO.images().get(0);
-//            if (mainImage != null && !mainImage.isEmpty()) {
-//                try {
-//                    campaign.setImageData(mainImage.getBytes());
-//                } catch (Exception e) {
-//                    throw new ValidationException("Не удалось прочитать image байты: " + e.getMessage());
-//                }
-//            }
-//        }
-
         AdvertisingCampaign savedCampaign = advertisingCampaignRepository.save(campaign);
         log.info("Кампания создана: {}", savedCampaign.getId());
     }

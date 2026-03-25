@@ -12,6 +12,7 @@ public class Author {
     private Long id;
 
     String nickname;
+
     int followers_count;
 
 

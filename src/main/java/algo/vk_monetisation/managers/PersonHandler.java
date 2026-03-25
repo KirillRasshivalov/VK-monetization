@@ -12,7 +12,6 @@ import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -22,8 +21,7 @@ public class PersonHandler {
 
     private final PersonRepository personRepository;
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ,
-            rollbackFor = Exception.class)
+    @Transactional
     public void addMainPerson(RequisitesDTO requisitesDTO) {
         log.info("Добавляем лицо отвечающее за компанию.");
         Person person = new Person();
