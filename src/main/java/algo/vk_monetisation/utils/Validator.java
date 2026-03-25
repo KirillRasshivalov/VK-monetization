@@ -2,8 +2,11 @@ package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.exceptions.ValidationException;
+import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +17,21 @@ import java.util.List;
 public class Validator {
 
     private final PersonRepository personRepository;
+
+    private final AdvertisingCampaignRepository advertisingCampaignRepository;
+
+    public void validateCampaignStatus(Long id) {
+        if (advertisingCampaignRepository.findById(id).isEmpty()) {
+            throw new ValidationException("Нету такой кампании.");
+        }
+    }
+
+    public void validateCompaign(Long id) {
+        if (advertisingCampaignRepository.findById(id).isEmpty() ||
+                advertisingCampaignRepository.findById(id).get().getContent() == null) {
+            throw new ValidationException("Не существует такой кампании.");
+        }
+    }
 
     public void validatePosev(PosevDTO posevDTO) throws ValidationException {
         validateMediaFiles(posevDTO.images());

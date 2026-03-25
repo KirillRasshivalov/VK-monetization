@@ -48,7 +48,6 @@ public class Content {
     @Column(name = "views")
     private Long views;
 
-    // Зафиксированные значения на момент завершения кампании.
     @Column(name = "final_likes")
     private Long finalLikes;
 

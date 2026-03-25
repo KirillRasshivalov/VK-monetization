@@ -38,8 +38,6 @@ public class AdvertisingCampaign {
     @Column(name = "end_date")
     private LocalDateTime endDate;
 
-    // Для Postgres: не используем @Lob, чтобы Hibernate не биндил параметр как OID.
-    // В схеме поле advertising_campaigns.image_data имеет тип BYTEA.
     @Column(name = "image_data", columnDefinition = "BYTEA")
     private byte[] imageData;
 

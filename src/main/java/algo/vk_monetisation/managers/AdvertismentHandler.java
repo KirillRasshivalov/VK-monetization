@@ -1,13 +1,17 @@
 package algo.vk_monetisation.managers;
 
+import algo.vk_monetisation.dto.CampaignStatusDTO;
+import algo.vk_monetisation.dto.ContentStatsDTO;
 import algo.vk_monetisation.dto.PosevDTO;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
+import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.entities.Person;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import algo.vk_monetisation.exceptions.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +44,6 @@ public class AdvertismentHandler {
         campaign.setPerson(person);
         campaign.setStatus(AdvertisingCampaign.CampaignStatus.DRAFT);
 
-        // Для совместимости с текущим DTO: храним только байты изображения (Content будет создан автором позже)
         if (posevDTO.images() != null && !posevDTO.images().isEmpty()) {
             MultipartFile mainImage = posevDTO.images().get(0);
             if (mainImage != null && !mainImage.isEmpty()) {
@@ -54,6 +57,27 @@ public class AdvertismentHandler {
 
         AdvertisingCampaign savedCampaign = advertisingCampaignRepository.save(campaign);
         log.info("Кампания создана: {}", savedCampaign.getId());
+    }
+
+    public ContentStatsDTO getStatsFromCompaign(Long id) {
+        AdvertisingCampaign campaign = advertisingCampaignRepository.findById(id).get();
+        Content content = campaign.getContent();
+        Long views = content.getFinalViews() != null ? content.getFinalViews() : content.getViews();
+        Long likes = content.getFinalLikes() != null ? content.getFinalLikes() : content.getLikes();
+        return new ContentStatsDTO(id, content.getId(), views, likes);
+    }
+
+    public CampaignStatusDTO getStatusFromCampaign(Long id) {
+        AdvertisingCampaign campaign = advertisingCampaignRepository.findById(id).get();
+        Long personId = campaign.getPerson() != null ? campaign.getPerson().getId() : null;
+        return new CampaignStatusDTO(
+                id,
+                campaign.getStatus() != null ? campaign.getStatus().name() : null,
+                campaign.getBudget(),
+                campaign.getStartDate(),
+                campaign.getEndDate(),
+                personId
+                );
     }
 }
 
