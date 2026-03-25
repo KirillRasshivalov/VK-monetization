@@ -5,7 +5,6 @@ import algo.vk_monetisation.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +19,7 @@ public class WalletController {
     @ResponseStatus(HttpStatus.OK)
     public void topUp(@RequestBody WalletTopUpDTO dto) {
         log.info("Запрос на пополнение баланса для personId={}", dto.personId());
-        walletService.topUp(dto);
+        walletService.uppBalance(dto);
     }
 }
 

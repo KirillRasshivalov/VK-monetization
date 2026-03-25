@@ -2,6 +2,7 @@ package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
+import algo.vk_monetisation.entities.Person;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
@@ -20,6 +21,17 @@ public class Validator {
     private final PersonRepository personRepository;
 
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
+
+    public void validateWalletUpper(WalletTopUpDTO dto) {
+        if (dto == null || dto.personId() == null) {
+            throw new ValidationException("personId не должен быть пустым");
+        }
+        if (dto.amount() == null || dto.amount() <= 0) {
+            throw new ValidationException("amount должен быть > 0");
+        }
+        personRepository.findById(dto.personId())
+                .orElseThrow(() -> new ValidationException("Person не найден: " + dto.personId()));
+    }
 
     public void validateAuthorContent(Long campaignId, MultipartFile image, MultipartFile video) {
         if (campaignId == null) {
