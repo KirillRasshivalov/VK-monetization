@@ -24,7 +24,7 @@ public class AuthorContentController {
             @RequestParam(value = "video", required = false) MultipartFile video
     ) {
         log.info("Запрос на загрузку контента для кампании {}", campaignId);
-        authorContentService.uploadContent(campaignId, image, video);
+        authorContentService.uploadContentForCampaign(campaignId, image, video);
     }
 }
 

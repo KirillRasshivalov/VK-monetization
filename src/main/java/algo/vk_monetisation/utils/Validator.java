@@ -1,6 +1,7 @@
 package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
+import algo.vk_monetisation.entities.AdvertisingCampaign;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
@@ -19,6 +20,23 @@ public class Validator {
     private final PersonRepository personRepository;
 
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
+
+    public void validateAuthorContent(Long campaignId, MultipartFile image, MultipartFile video) {
+        if (campaignId == null) {
+            throw new ValidationException("campaignId не может быть null");
+        }
+        boolean hasImage = image != null && !image.isEmpty();
+        boolean hasVideo = video != null && !video.isEmpty();
+        if (!hasImage && !hasVideo) {
+            throw new ValidationException("Нужно передать хотя бы один файл контента (image или video).");
+        }
+        AdvertisingCampaign campaign = advertisingCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new ValidationException("Кампания не найдена: " + campaignId));
+        var person = campaign.getPerson();
+        if (person == null) {
+            throw new ValidationException("У кампании не задан заказчик (person).");
+        }
+    }
 
     public void validateCampaignStatus(Long id) {
         if (advertisingCampaignRepository.findById(id).isEmpty()) {
