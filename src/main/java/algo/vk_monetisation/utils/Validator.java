@@ -1,14 +1,24 @@
 package algo.vk_monetisation.utils;
 
-import algo.vk_monetisation.dto.CompanyInfoDTO;
-import algo.vk_monetisation.dto.ContactsDTO;
-import algo.vk_monetisation.dto.LegalEntityDTO;
-import algo.vk_monetisation.dto.RequisitesDTO;
+import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.exceptions.ValidationException;
+import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class Validator {
+
+    private final AdvertisingCampaignRepository advertisingCampaignRepository;
+
+    public void validatePosev(PosevDTO posevDTO) throws ValidationException {
+        validateMediaFiles(posevDTO.images());
+        validatePersonId(posevDTO.personId());
+    }
 
     public void validateRequisites(RequisitesDTO requisitesDTO) throws ValidationException {
         CompanyInfoDTO companyInfoDTO = requisitesDTO.companyInfoDTO();
@@ -46,6 +56,27 @@ public class Validator {
     private void validatePosIndex(int posIndex) {
         if (((Integer) posIndex).toString().length() != 6) {
             throw new ValidationException("Почтовый индекс должен состоять из 6 цифр.");
+        }
+    }
+
+    private void validateMediaFiles(List<MultipartFile> files) {
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            if (file == null || file.isEmpty()) {
+                throw new ValidationException("Медиафайл не должен быть пустым.");
+            }
+            if (file.getSize() == 0) {
+                throw new ValidationException("Размер файла не должен быть 0 байт.");
+            }
+        }
+    }
+
+    private void validatePersonId(Long personId) {
+        if (personId == null) {
+            throw new ValidationException("Значение ответственного за рекламную кампанию не должно быть пусто.");
+        }
+        if (!advertisingCampaignRepository.existsById(personId)) {
+            throw new ValidationException("Данный пользователь не может создать рекламу.");
         }
     }
 

@@ -17,8 +17,8 @@ public class CompanyService {
     private final Validator validator;
 
     public void addCompany(RequisitesDTO requisitesDTO) {
-        validator.validateRequisites(requisitesDTO);
         log.info("Команда на создание ответсвтенного за компанию передана в сервис.");
+        validator.validateRequisites(requisitesDTO);
         personHandler.addMainPerson(requisitesDTO);
     }
 }
