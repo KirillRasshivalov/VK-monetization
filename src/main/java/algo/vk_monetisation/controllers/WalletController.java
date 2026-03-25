@@ -4,11 +4,9 @@ import algo.vk_monetisation.dto.WalletTopUpDTO;
 import algo.vk_monetisation.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -19,10 +17,10 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping("/topup")
-    public ResponseEntity<Void> topUp(@RequestBody WalletTopUpDTO dto) {
+    @ResponseStatus(HttpStatus.OK)
+    public void topUp(@RequestBody WalletTopUpDTO dto) {
         log.info("Запрос на пополнение баланса для personId={}", dto.personId());
         walletService.topUp(dto);
-        return ResponseEntity.ok().build();
     }
 }
 

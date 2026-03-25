@@ -6,40 +6,36 @@ import algo.vk_monetisation.dto.PosevDTO;
 import algo.vk_monetisation.services.AdvertisementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
 
-    @PostMapping("/advert")
-    public ResponseEntity<Void> placeAd(@RequestBody PosevDTO posevDTO) {
+    @PostMapping("/advertisement_campaign")
+    @ResponseStatus(HttpStatus.OK)
+    public void placeAd(@RequestBody PosevDTO posevDTO) {
         log.info("Пришел запрос на создание рекламной кампании.");
         advertisementService.addAdvertisement(posevDTO);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/campaign/{campaignId}/stats")
-    public ResponseEntity<ContentStatsDTO> getCampaignStats(@PathVariable Long campaignId) {
+    @ResponseStatus(HttpStatus.OK)
+    public ContentStatsDTO getCampaignStats(@PathVariable Long campaignId) {
         log.info("Пришел запрос на полукчения статистики.");
-        ContentStatsDTO contentStatsDTO = advertisementService.getStats(campaignId);
-        return ResponseEntity.ok(contentStatsDTO);
+        return advertisementService.getStats(campaignId);
     }
 
     @GetMapping("/campaign/{campaignId}")
-    public ResponseEntity<CampaignStatusDTO> getCampaignStatus(@PathVariable Long campaignId) {
+    @ResponseStatus(HttpStatus.OK)
+    public CampaignStatusDTO getCampaignStatus(@PathVariable Long campaignId) {
         log.info("Пришел запрос на получение статуса кампании.");
-        CampaignStatusDTO campaignStatusDTO = advertisementService.getStatus(campaignId);
-        return ResponseEntity.ok(campaignStatusDTO);
+        return advertisementService.getStatus(campaignId);
     }
 }
