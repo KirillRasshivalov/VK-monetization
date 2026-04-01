@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "advertising_campaigns")
@@ -14,9 +15,8 @@ public class AdvertisingCampaign {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "content_id", nullable = true)
-    private Content content;
+    @OneToMany(mappedBy = "advertisingCampaign", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Content> content;
 
     private String title;
     private String description;

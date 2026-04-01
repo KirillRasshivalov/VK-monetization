@@ -8,6 +8,7 @@ import algo.vk_monetisation.repositories.ContentRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ public class AuthorContentHandler {
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
     private final ContentRepository contentRepository;
     private final PersonRepository personRepository;
+    private final ModelMapper modelMapper;
 
     @Transactional
     public void uploadContent(Long campaignId, MultipartFile image, MultipartFile video) {
@@ -56,11 +58,8 @@ public class AuthorContentHandler {
             throw new ValidationException("Кампания не может быть активирована в текущем статусе: " + campaign.getStatus());
         }
 
-        Content content = campaign.getContent();
-        if (content == null) {
-            content = new Content();
-            campaign.setContent(content);
-        }
+        Content content = new Content();
+
         content.setLikes(0L);
         content.setViews(0L);
         content.setCreatedAt(LocalDateTime.now());
@@ -79,9 +78,27 @@ public class AuthorContentHandler {
         content.setVideoContentType(video.getContentType());
         content.setVideoFileName(video.getOriginalFilename());
         content.setMediaMetadata(null);
+        content.setAdvertisingCampaign(campaign);
         contentRepository.save(content);
+        campaign.getContent().add(content);
         advertisingCampaignRepository.save(campaign);
         log.info("Контент загружен для кампании {} (contentId={})", campaignId, content.getId());
+    }
+
+    @Transactional
+    public void updateContent(Long contentId, Content content) {
+        log.info("Начало изменения контента.");
+        Content existingContent = contentRepository.findById(contentId).get();
+        modelMapper.map(content, existingContent);
+        contentRepository.save(existingContent);
+        log.info("Изменения учпешно сохранены.");
+    }
+
+    @Transactional
+    public void deleteContent(Long contentId) {
+        log.info("Начало удаления контента.");
+        contentRepository.deleteById(contentId);
+        log.info("Удаление успешно прошло.");
     }
 
 }

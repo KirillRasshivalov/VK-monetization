@@ -11,9 +11,14 @@ import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -23,6 +28,8 @@ public class AdvertismentHandler {
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
 
     private final PersonRepository personRepository;
+
+    private final int PAGE_SIZE = 10;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ,
             rollbackFor = {Exception.class, RuntimeException.class})
@@ -42,12 +49,17 @@ public class AdvertismentHandler {
         log.info("Кампания создана: {}", savedCampaign.getId());
     }
 
-    public ContentStatsDTO getStatsFromCompaign(Long id) {
-        AdvertisingCampaign campaign = advertisingCampaignRepository.findById(id).get();
-        Content content = campaign.getContent();
-        Long views = content.getFinalViews() != null ? content.getFinalViews() : content.getViews();
-        Long likes = content.getFinalLikes() != null ? content.getFinalLikes() : content.getLikes();
-        return new ContentStatsDTO(id, content.getId(), views, likes);
+    public List<ContentStatsDTO> getStatsFromCampaign(Long id, int pageNum) {
+        log.info("Пришел запрос на вывод статистики для всего контента рекламной кампании.");
+        Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
+        List<Content> content = advertisingCampaignRepository.findContentsByCampaignId(id, pageable);
+        List<ContentStatsDTO> contentStatsDTOList = new ArrayList<>();
+        for (int i = 0; i < content.size(); i++) {
+            Long views = content.get(i).getFinalViews() != null ? content.get(i).getFinalViews() : content.get(i).getViews();
+            Long likes = content.get(i).getFinalLikes() != null ? content.get(i).getFinalLikes() : content.get(i).getLikes();
+            contentStatsDTOList.add(new ContentStatsDTO(id, content.get(i).getId(), views, likes));
+        }
+        return contentStatsDTOList;
     }
 
     public CampaignStatusDTO getStatusFromCampaign(Long id) {
@@ -61,6 +73,17 @@ public class AdvertismentHandler {
                 campaign.getEndDate(),
                 personId
                 );
+    }
+
+    public List<Content> shawAllContent(Long id, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
+        return advertisingCampaignRepository.findContentsByCampaignId(id, pageable);
+    }
+
+    public List<AdvertisingCampaign> getAdvertisingCampaigns(Long id, int pageNum) {
+        log.info("Начало сбора всех рекламных кампаний.");
+        Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
+        return personRepository.findAdvertisingCampaignsByPersonId(id, pageable);
     }
 }
 

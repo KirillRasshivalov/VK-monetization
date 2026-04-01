@@ -1,5 +1,6 @@
 package algo.vk_monetisation.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -15,6 +16,11 @@ public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "campaign_id", nullable = false)
+    @JsonBackReference
+    private AdvertisingCampaign advertisingCampaign;
 
     @Column(name = "image_content_type")
     private String imageContentType;
