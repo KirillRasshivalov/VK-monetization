@@ -2,10 +2,14 @@ package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
+import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
+import algo.vk_monetisation.repositories.ContentRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +22,42 @@ public class Validator {
     private final PersonRepository personRepository;
 
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
+
+    private final ContentRepository contentRepository;
+
+    public void validateCampaign(Long personId, int pageNum) {
+        if (personRepository.findById(personId).isEmpty()) {
+            throw new ValidationException("Персоны с id =  " + personId + " не существует.");
+        }
+        if (pageNum <= 0) {
+            throw new ValidationException("Страница должна быть > 0.");
+        }
+    }
+
+    public void validateContent(Long contentId) {
+        if (contentRepository.findById(contentId).isEmpty()) {
+            throw new ValidationException("Нету такого контента.");
+        }
+    }
+
+    public void validateContent(Long contentId, Content content) {
+        if (contentRepository.findById(contentId).isEmpty()) {
+            throw new ValidationException("Данному айди ничего не принадлежит.");
+        }
+        if (content == null) {
+            throw new ValidationException("Контент пуст.");
+        }
+    }
+
+    public void validateContent(Long campaignId, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, 10);
+        if (advertisingCampaignRepository.findContentsByCampaignId(campaignId, pageable).isEmpty()) {
+            throw new ValidationException("Данному айдишнига ничего не принадлежит.");
+        }
+        if (pageNum <= 0) {
+            throw new ValidationException("Страница должна быть > 0.");
+        }
+    }
 
     public void validateWalletUpper(WalletTopUpDTO dto) {
         if (dto == null || dto.personId() == null) {

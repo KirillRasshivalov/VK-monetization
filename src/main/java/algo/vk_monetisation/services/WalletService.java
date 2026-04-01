@@ -17,7 +17,7 @@ public class WalletService {
     private final Validator validator;
 
     public void uppBalance(WalletTopUpDTO dto) {
-        log.info("Приешл запрос на сервис для пополненения баланса.");
+        log.info("Пришел запрос на сервис для пополненения баланса.");
         validator.validateWalletUpper(dto);
         balanceHandler.topUp(dto);
     }
