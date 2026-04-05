@@ -52,14 +52,14 @@ public class AdvertisementController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteCampaign(@PathVariable Long campaignId) {
         log.info("Пришел запрос на удаление кампании.");
-        return ;
+        advertisementService.deleteCampaign(campaignId);
     }
 
     @PutMapping("/update_campaign/{campaignId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateCampaign(@PathVariable Long campaignId, @RequestBody AdvertisingCampaign advertisingCampaign) {
         log.info("Пришел запрос на обновление кампании.");
-        return ;
+        advertisementService.updateCampaign(campaignId, advertisingCampaign);
     }
 
 }

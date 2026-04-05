@@ -29,7 +29,7 @@ public class AdvertisementService {
 
     public List<ContentStatsDTO> getStats(Long campaignId, int pageNum) {
         log.info("Пришел запрос на сервис на получение статистики.");
-        validator.validateCompaign(campaignId);
+        validator.validateCampaign(campaignId);
         return advertismentHandler.getStatsFromCampaign(campaignId, pageNum);
     }
 
@@ -43,5 +43,17 @@ public class AdvertisementService {
         log.info("Пришел запрос на сервис на получение всех рекламных кампаний");
         validator.validateCampaign(personId, pageNum);
         return advertismentHandler.getAdvertisingCampaigns(personId, pageNum);
+    }
+
+    public void deleteCampaign(Long campaignId) {
+        log.info("Пришел запрос на сервис на удаление кампании.");
+        validator.validateCampaign(campaignId);
+        advertismentHandler.deleteCampaign(campaignId);
+    }
+
+    public void updateCampaign(Long campaignId, AdvertisingCampaign advertisingCampaign) {
+        log.info("Пришел запрос на сервис на обновление рекламной кампании.");
+        validator.validateCampaign(campaignId, advertisingCampaign);
+        advertismentHandler.updateCampaign(campaignId, advertisingCampaign);
     }
 }

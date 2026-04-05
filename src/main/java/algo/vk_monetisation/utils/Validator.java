@@ -2,9 +2,11 @@ package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
+import algo.vk_monetisation.entities.Contacts;
 import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
+import algo.vk_monetisation.repositories.ContactsRepository;
 import algo.vk_monetisation.repositories.ContentRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,29 @@ public class Validator {
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
 
     private final ContentRepository contentRepository;
+
+    private final ContactsRepository contactsRepository;
+
+    public void validateContacts(Long contactsId, Contacts contacts) {
+        if (contacts == null) {
+            throw new ValidationException("Контакты пусты.");
+        }
+        if (contactsRepository.findById(contactsId) == null) {
+            throw new ValidationException("Такого контакта нет.");
+        }
+    }
+
+    public void validateContacts(ContactsDTO contacts) {
+        if (contacts == null) {
+            throw new ValidationException("Контакт пусты.");
+        }
+    }
+
+    public void validateContacts(Long contactId) {
+        if (contactsRepository.findById(contactId) == null) {
+            throw new ValidationException("Нету такого контакта.");
+        }
+    }
 
     public void validateCampaign(Long personId, int pageNum) {
         if (personRepository.findById(personId).isEmpty()) {
@@ -93,7 +118,17 @@ public class Validator {
         }
     }
 
-    public void validateCompaign(Long id) {
+    public void validateCampaign(Long id, AdvertisingCampaign advertisingCampaign) {
+        if (advertisingCampaignRepository.findById(id).isEmpty() ||
+                advertisingCampaignRepository.findById(id).get().getContent() == null) {
+            throw new ValidationException("Не существует такой кампании.");
+        }
+        if (advertisingCampaign == null || advertisingCampaign.getContent() == null) {
+            throw new ValidationException("Пустая кампания.");
+        }
+    }
+
+    public void validateCampaign(Long id) {
         if (advertisingCampaignRepository.findById(id).isEmpty() ||
                 advertisingCampaignRepository.findById(id).get().getContent() == null) {
             throw new ValidationException("Не существует такой кампании.");
