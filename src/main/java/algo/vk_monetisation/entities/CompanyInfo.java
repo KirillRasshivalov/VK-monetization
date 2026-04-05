@@ -20,7 +20,7 @@ public class CompanyInfo {
 
     private String name;
 
-    @Column(name = "ogrnip")
+    @Column(name = "ogrnip", nullable = false)
     private String ogrnip;
 
     @OneToOne(fetch = FetchType.LAZY)

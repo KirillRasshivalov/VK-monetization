@@ -11,11 +11,13 @@ import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,8 @@ public class AdvertismentHandler {
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
 
     private final PersonRepository personRepository;
+
+    private final ModelMapper modelMapper;
 
     private final int PAGE_SIZE = 10;
 
@@ -84,6 +88,19 @@ public class AdvertismentHandler {
         log.info("Начало сбора всех рекламных кампаний.");
         Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
         return personRepository.findAdvertisingCampaignsByPersonId(id, pageable);
+    }
+
+    public void deleteCampaign(Long campaignId) {
+        log.info("Начало удаление рекламной кампании.");
+        advertisingCampaignRepository.deleteById(campaignId);
+    }
+
+    public void updateCampaign(Long campaignId, AdvertisingCampaign advertisingCampaign) {
+        log.info("Начало обновления рекламной кампании.");
+        AdvertisingCampaign oldCampaign = advertisingCampaignRepository.findById(campaignId).get();
+        modelMapper.map(advertisingCampaign, oldCampaign);
+        advertisingCampaignRepository.save(oldCampaign);
+        log.info("Обновление данных прошло успешно.");
     }
 }
 

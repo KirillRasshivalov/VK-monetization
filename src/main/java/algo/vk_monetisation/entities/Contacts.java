@@ -15,10 +15,10 @@ public class Contacts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "contact_person")
+    @Column(name = "contact_person", nullable = false)
     private String contactPerson;
 
-    @Column(name = "contact_number")
+    @Column(name = "contact_number", nullable = false)
     private String contactNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
