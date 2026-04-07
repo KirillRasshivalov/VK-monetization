@@ -1,6 +1,7 @@
 package algo.vk_monetisation.controllers;
 
 import algo.vk_monetisation.dto.ContactsDTO;
+import algo.vk_monetisation.dto.ContactsResponseDTO;
 import algo.vk_monetisation.entities.Contacts;
 import algo.vk_monetisation.services.ContactsService;
 import lombok.RequiredArgsConstructor;
@@ -18,23 +19,23 @@ public class ContactsController {
 
     @GetMapping("/show_contacts/{contactsId}")
     @ResponseStatus(HttpStatus.OK)
-    public Contacts showContacts(@PathVariable Long contactsId) {
+    public ContactsResponseDTO showContacts(@PathVariable Long contactsId) {
         log.info("Пришел запрос на показ контактов.");
         return contactsService.getContacts(contactsId);
     }
 
-    @PostMapping("/create_contacts")
+    @PostMapping("/create_contacts/{personId}")
     @ResponseStatus(HttpStatus.OK)
-    public void createContacts(@RequestBody ContactsDTO contactsDTO) {
+    public void createContacts(@PathVariable Long personId,@RequestBody ContactsDTO contactsDTO) {
         log.info("Пришел запрос на добавление контактов.");
-        contactsService.createContacts(contactsDTO);
+        contactsService.createContacts(personId, contactsDTO);
     }
 
     @PutMapping("/update_contacts/{contactsId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateContacts(@PathVariable Long contactsId, @RequestBody Contacts contacts) {
+    public void updateContacts(@PathVariable Long contactsId, @RequestBody ContactsDTO contactsDTO) {
         log.info("Пришел запрос на обновление контактов представителя.");
-        contactsService.updateContacts(contactsId, contacts);
+        contactsService.updateContacts(contactsId, contactsDTO);
     }
 
 //    @DeleteMapping("/delete_contacts/{contactsId}")
