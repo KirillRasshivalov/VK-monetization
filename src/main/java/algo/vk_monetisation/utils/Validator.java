@@ -65,7 +65,7 @@ public class Validator {
         }
     }
 
-    public void validateContent(Long contentId, Content content) {
+    public void validateContent(Long contentId, ContentDTO content) {
         if (contentRepository.findById(contentId).isEmpty()) {
             throw new ValidationException("Данному айди ничего не принадлежит.");
         }

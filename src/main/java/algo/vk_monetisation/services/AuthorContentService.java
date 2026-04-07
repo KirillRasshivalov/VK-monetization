@@ -1,22 +1,26 @@
 package algo.vk_monetisation.services;
 
+import algo.vk_monetisation.dto.ContentDTO;
+import algo.vk_monetisation.dto.ContentResponseDTO;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
 import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.ContentRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
+import algo.vk_monetisation.utils.ContentMapper;
 import algo.vk_monetisation.utils.Validator;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,12 +33,15 @@ public class AuthorContentService {
     private final AdvertisingCampaignRepository advertisingCampaignRepository;
 
     private final ContentRepository contentRepository;
+
     private final PersonRepository personRepository;
-    private final ModelMapper modelMapper;
+
+    private final ContentMapper contentMapper;
 
     private final int PAGE_SIZE = 10;
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ,
+            rollbackFor = {Exception.class, RuntimeException.class})
     public void uploadContentForCampaign(Long campaignId, MultipartFile image, MultipartFile video) {
         log.info("В сервис пришел запрос на добавление контета в кампанию.");
         validator.validateAuthorContent(campaignId, image, video);
@@ -90,19 +97,24 @@ public class AuthorContentService {
         log.info("Контент загружен для кампании {} (contentId={})", campaignId, content.getId());
     }
 
-    public List<Content> getAllContentFromCampaign(Long campaignId, int pageNum) {
+    public List<ContentResponseDTO> getAllContentFromCampaign(Long campaignId, int pageNum) {
         log.info("Пришел запрос на сервис на получение всего контента рекламной кампании.");
         validator.validateContent(campaignId, pageNum);
         Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
-        return advertisingCampaignRepository.findContentsByCampaignId(campaignId, pageable);
+        List<Content> contents = advertisingCampaignRepository.findContentsByCampaignId(campaignId, pageable);
+        List<ContentResponseDTO> contentResponseDTOS = new ArrayList<>();
+        for (Content content : contents) {
+            contentResponseDTOS.add(contentMapper.toContentResponseDTO(content));
+        }
+        return contentResponseDTOS;
     }
 
     @Transactional
-    public void updateContent(Long contentId, Content content) {
+    public void updateContent(Long contentId, ContentDTO contentDTO) {
         log.info("Пришел запрос на сервис на обновление контента.");
-        validator.validateContent(contentId, content);
+        validator.validateContent(contentId, contentDTO);
         Content existingContent = contentRepository.findById(contentId).get();
-        modelMapper.map(content, existingContent);
+        contentMapper.updateEntity(existingContent, contentDTO);
         contentRepository.save(existingContent);
         log.info("Изменения учпешно сохранены.");
     }

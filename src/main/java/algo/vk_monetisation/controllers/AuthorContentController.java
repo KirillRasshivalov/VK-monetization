@@ -1,7 +1,7 @@
 package algo.vk_monetisation.controllers;
 
-import algo.vk_monetisation.entities.Content;
-import algo.vk_monetisation.services.AdvertisementService;
+import algo.vk_monetisation.dto.ContentDTO;
+import algo.vk_monetisation.dto.ContentResponseDTO;
 import algo.vk_monetisation.services.AuthorContentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,18 +19,18 @@ public class AuthorContentController {
 
     private final AuthorContentService authorContentService;
 
-    @GetMapping("/shaw_all_content_campaignes/{campaignId}")
+    @GetMapping("/get_all_content_campaigns/{campaignId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Content> shawAllCampaignsContent(@PathVariable Long campaignId, @RequestParam int pageNum) {
+    public List<ContentResponseDTO> getAllCampaignsContent(@PathVariable Long campaignId, @RequestParam int pageNum) {
         log.info("Пришел запрос на получение всего контента одной рекламной кампании: " + campaignId);
         return authorContentService.getAllContentFromCampaign(campaignId, pageNum);
     }
 
     @PutMapping("/update_content/{contentId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateContent(@PathVariable Long contentId, @RequestBody Content content) {
+    public void updateContent(@PathVariable Long contentId, @RequestBody ContentDTO contentDTO) {
         log.info("Пришел запрос на обновление контента.");
-        authorContentService.updateContent(contentId, content);
+        authorContentService.updateContent(contentId, contentDTO);
     }
 
     @DeleteMapping("/delete_content/{contentId}")
