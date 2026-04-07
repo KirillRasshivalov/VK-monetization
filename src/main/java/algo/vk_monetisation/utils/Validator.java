@@ -118,12 +118,12 @@ public class Validator {
         }
     }
 
-    public void validateCampaign(Long id, AdvertisingCampaign advertisingCampaign) {
+    public void validateCampaign(Long id, PosevDTO posevDTO) {
         if (advertisingCampaignRepository.findById(id).isEmpty() ||
                 advertisingCampaignRepository.findById(id).get().getContent() == null) {
             throw new ValidationException("Не существует такой кампании.");
         }
-        if (advertisingCampaign == null || advertisingCampaign.getContent() == null) {
+        if (posevDTO == null) {
             throw new ValidationException("Пустая кампания.");
         }
     }
@@ -147,7 +147,7 @@ public class Validator {
         validateOGRNIP(companyInfoDTO.ogrnip());
         validateNumber(contactsDTO.contactNumber());
         validateNumber(contactsDTO.contactPearson());
-        validatePosIndex(legalEntityDTO.index());
+        validatePosIndex(legalEntityDTO.postalIndex());
     }
 
     private void validateINN(String INN) {

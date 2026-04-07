@@ -18,4 +18,5 @@ public interface AdvertisingCampaignRepository extends JpaRepository<Advertising
             "LEFT JOIN FETCH ct.advertisingCampaign " +
             "WHERE ct.advertisingCampaign.id = :campaignId")
     List<Content> findContentsByCampaignId(@Param("campaignId") Long campaignId, Pageable pageable);
+
 }

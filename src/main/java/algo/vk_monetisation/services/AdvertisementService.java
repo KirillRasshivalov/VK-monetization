@@ -9,6 +9,7 @@ import algo.vk_monetisation.entities.Person;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
+import algo.vk_monetisation.utils.AdvertisingCampaignMapper;
 import algo.vk_monetisation.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class AdvertisementService {
 
     private final PersonRepository personRepository;
 
+    private final AdvertisingCampaignMapper advertisingCampaignMapper;
+
     private final ModelMapper modelMapper;
 
     private final int PAGE_SIZE = 10;
@@ -47,7 +50,7 @@ public class AdvertisementService {
         AdvertisingCampaign campaign = new AdvertisingCampaign();
         campaign.setTitle(posevDTO.title());
         campaign.setDescription(posevDTO.description());
-        campaign.setOkvdCode(posevDTO.OKVDCode());
+        campaign.setOkvdCode(posevDTO.okvdCode());
         campaign.setBudget(posevDTO.budget());
         campaign.setTargetAudience(posevDTO.targetAudience());
         campaign.setPerson(person);
@@ -101,11 +104,11 @@ public class AdvertisementService {
     }
 
     @Transactional
-    public void updateCampaign(Long campaignId, AdvertisingCampaign advertisingCampaign) {
+    public void updateCampaign(Long campaignId, PosevDTO posevDTO) {
         log.info("Пришел запрос на сервис на обновление рекламной кампании.");
-        validator.validateCampaign(campaignId, advertisingCampaign);
+        validator.validateCampaign(campaignId, posevDTO);
         AdvertisingCampaign oldCampaign = advertisingCampaignRepository.findById(campaignId).get();
-        modelMapper.map(advertisingCampaign, oldCampaign);
+        advertisingCampaignMapper.updateEntity(oldCampaign, posevDTO);
         advertisingCampaignRepository.save(oldCampaign);
         log.info("Обновление данных прошло успешно.");
     }

@@ -41,7 +41,7 @@ public class AdvertisementController {
         return advertisementService.getStats(campaignId, pageNum);
     }
 
-    @GetMapping("/shaw_all_campaigns/{personId}")
+    @GetMapping("/get_all_campaigns/{personId}")
     @ResponseStatus(HttpStatus.OK)
     public List<AdvertisingCampaign> getAllCampaigns(@PathVariable Long personId, @RequestParam int pageNum) {
         log.info("Пришел запрос на просмотр всех рекламных кампаний ответственного за продвижение лица.");
@@ -57,9 +57,9 @@ public class AdvertisementController {
 
     @PutMapping("/update_campaign/{campaignId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateCampaign(@PathVariable Long campaignId, @RequestBody AdvertisingCampaign advertisingCampaign) {
+    public void updateCampaign(@PathVariable Long campaignId, @RequestBody PosevDTO posevDTO) {
         log.info("Пришел запрос на обновление кампании.");
-        advertisementService.updateCampaign(campaignId, advertisingCampaign);
+        advertisementService.updateCampaign(campaignId, posevDTO);
     }
 
 }
