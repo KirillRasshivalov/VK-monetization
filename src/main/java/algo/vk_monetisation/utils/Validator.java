@@ -29,7 +29,7 @@ public class Validator {
 
     private final ContactsRepository contactsRepository;
 
-    public void validateContacts(Long contactsId, Contacts contacts) {
+    public void validateContacts(Long contactsId, ContactsDTO contacts) {
         if (contacts == null) {
             throw new ValidationException("Контакты пусты.");
         }
@@ -54,8 +54,8 @@ public class Validator {
         if (personRepository.findById(personId).isEmpty()) {
             throw new ValidationException("Персоны с id =  " + personId + " не существует.");
         }
-        if (pageNum <= 0) {
-            throw new ValidationException("Страница должна быть > 0.");
+        if (pageNum < 0) {
+            throw new ValidationException("Страница должна быть >= 0.");
         }
     }
 
@@ -79,8 +79,8 @@ public class Validator {
         if (advertisingCampaignRepository.findContentsByCampaignId(campaignId, pageable).isEmpty()) {
             throw new ValidationException("Данному айдишнига ничего не принадлежит.");
         }
-        if (pageNum <= 0) {
-            throw new ValidationException("Страница должна быть > 0.");
+        if (pageNum < 0) {
+            throw new ValidationException("Страница должна быть >= 0.");
         }
     }
 

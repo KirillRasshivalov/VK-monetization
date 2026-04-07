@@ -9,6 +9,5 @@ public record CampaignStatusDTO(
         LocalDateTime startDate,
         LocalDateTime endDate,
         Long personId
-) {
-}
+) { }
 

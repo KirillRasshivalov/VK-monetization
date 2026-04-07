@@ -5,6 +5,5 @@ public record ContentStatsDTO(
         Long contentId,
         Long views,
         Long likes
-) {
-}
+) { }
 

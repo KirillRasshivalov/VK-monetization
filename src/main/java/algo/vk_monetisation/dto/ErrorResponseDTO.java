@@ -9,5 +9,5 @@ public record ErrorResponseDTO(
         String error,
         String message,
         String path,
-        String trace)
-{ }
+        String trace
+) { }
