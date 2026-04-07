@@ -1,6 +1,7 @@
 package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.PosevDTO;
+import algo.vk_monetisation.dto.PosevResponceDTO;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,4 +12,8 @@ public interface AdvertisingCampaignMapper {
 
     @Mapping(target = "id", ignore = true)
     void updateEntity(@MappingTarget AdvertisingCampaign target, PosevDTO source);
+
+    @Mapping(source = "person.id", target = "personId")
+    @Mapping(source = "status", target = "status")
+    PosevResponceDTO toDTO(AdvertisingCampaign entity);
 }

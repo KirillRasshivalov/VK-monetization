@@ -3,6 +3,7 @@ package algo.vk_monetisation.services;
 import algo.vk_monetisation.dto.CampaignStatusDTO;
 import algo.vk_monetisation.dto.ContentStatsDTO;
 import algo.vk_monetisation.dto.PosevDTO;
+import algo.vk_monetisation.dto.PosevResponceDTO;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
 import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.entities.Person;
@@ -35,8 +36,6 @@ public class AdvertisementService {
     private final PersonRepository personRepository;
 
     private final AdvertisingCampaignMapper advertisingCampaignMapper;
-
-    private final ModelMapper modelMapper;
 
     private final int PAGE_SIZE = 10;
 
@@ -88,12 +87,17 @@ public class AdvertisementService {
         );
     }
 
-    public List<AdvertisingCampaign> getAllCampaigns(Long personId, int pageNum) {
+    public List<PosevResponceDTO> getAllCampaigns(Long personId, int pageNum) {
         log.info("Пришел запрос на сервис на получение всех рекламных кампаний");
         validator.validateCampaign(personId, pageNum);
         log.info("Начало сбора всех рекламных кампаний.");
         Pageable pageable = PageRequest.of(pageNum, PAGE_SIZE);
-        return personRepository.findAdvertisingCampaignsByPersonId(personId, pageable);
+        List<AdvertisingCampaign> campaigns = personRepository.findAdvertisingCampaignsByPersonId(personId, pageable);
+        List<PosevResponceDTO> posevResponceDTOList = new ArrayList<>();
+        for (AdvertisingCampaign campaign : campaigns) {
+            posevResponceDTOList.add(advertisingCampaignMapper.toDTO(campaign));
+        }
+        return posevResponceDTOList;
     }
 
     @Transactional

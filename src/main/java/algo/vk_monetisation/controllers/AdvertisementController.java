@@ -3,7 +3,7 @@ package algo.vk_monetisation.controllers;
 import algo.vk_monetisation.dto.CampaignStatusDTO;
 import algo.vk_monetisation.dto.ContentStatsDTO;
 import algo.vk_monetisation.dto.PosevDTO;
-import algo.vk_monetisation.entities.AdvertisingCampaign;
+import algo.vk_monetisation.dto.PosevResponceDTO;
 import algo.vk_monetisation.services.AdvertisementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +43,7 @@ public class AdvertisementController {
 
     @GetMapping("/get_all_campaigns/{personId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<AdvertisingCampaign> getAllCampaigns(@PathVariable Long personId, @RequestParam int pageNum) {
+    public List<PosevResponceDTO> getAllCampaigns(@PathVariable Long personId, @RequestParam int pageNum) {
         log.info("Пришел запрос на просмотр всех рекламных кампаний ответственного за продвижение лица.");
         return advertisementService.getAllCampaigns(personId, pageNum);
     }
