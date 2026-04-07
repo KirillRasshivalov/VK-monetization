@@ -4,11 +4,9 @@ import algo.vk_monetisation.dto.*;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
 import algo.vk_monetisation.entities.Contacts;
 import algo.vk_monetisation.entities.Content;
+import algo.vk_monetisation.entities.LegalEntity;
 import algo.vk_monetisation.exceptions.ValidationException;
-import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
-import algo.vk_monetisation.repositories.ContactsRepository;
-import algo.vk_monetisation.repositories.ContentRepository;
-import algo.vk_monetisation.repositories.PersonRepository;
+import algo.vk_monetisation.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +26,29 @@ public class Validator {
     private final ContentRepository contentRepository;
 
     private final ContactsRepository contactsRepository;
+
+    private final LegalEntityRepository legalEntityRepository;
+
+    public void validateLegalEntity(Long id, LegalEntityDTO legalEntity) {
+        if (!legalEntityRepository.existsById(id)) {
+            throw new ValidationException("Legal entity не найден.");
+        }
+        if (legalEntity == null) {
+            throw new ValidationException("Legal entity пустой.");
+        }
+    }
+
+    public void validateLegalEntity(Long id) {
+        if (!legalEntityRepository.existsById(id)) {
+            throw new ValidationException("Legal entity не найден.");
+        }
+    }
+
+    public void validateLegalEntity(LegalEntityDTO legalEntityDTO) {
+        if (legalEntityDTO == null) {
+            throw new ValidationException("Legal entity пустой.");
+        }
+    }
 
     public void validateContacts(Long contactsId, ContactsDTO contacts) {
         if (contacts == null) {

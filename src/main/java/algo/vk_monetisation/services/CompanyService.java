@@ -9,6 +9,7 @@ import algo.vk_monetisation.entities.Contacts;
 import algo.vk_monetisation.entities.LegalEntity;
 import algo.vk_monetisation.entities.Person;
 import algo.vk_monetisation.repositories.PersonRepository;
+import algo.vk_monetisation.utils.RequisitesMapper;
 import algo.vk_monetisation.utils.Validator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,41 +25,14 @@ public class CompanyService {
 
     private final Validator validator;
 
+    private final RequisitesMapper requisitesMapper;
+
     @Transactional
     public void addCompany(RequisitesDTO requisitesDTO) {
-        log.info("Команда на создание ответсвтенного за компанию передана в сервис.");
+        log.info("Команда на создание ответственного за компанию передана в сервис.");
         validator.validateRequisites(requisitesDTO);
-        Person person = new Person();
-        person.setName(requisitesDTO.companyInfoDTO().name());
-        person.setSurname(requisitesDTO.companyInfoDTO().surname());
-        person.setLastName(requisitesDTO.companyInfoDTO().lastName());
-        log.debug("Лицо успешно создано");
-        LegalEntityDTO legalEntityDTO = requisitesDTO.legalEntityDTO();
-        LegalEntity legalEntity = new LegalEntity();
-        legalEntity.setPostalIndex(legalEntityDTO.index());
-        legalEntity.setTown(legalEntityDTO.town());
-        legalEntity.setAddress(legalEntityDTO.adress());
-        legalEntity.setRegion(legalEntityDTO.region());
-        legalEntity.setStreet(legalEntityDTO.street());
-        legalEntity.setApartmentNumber(legalEntityDTO.numOfFlat());
-        legalEntity.setPerson(person);
-        person.setLegalEntity(legalEntity);
-        log.debug("Местоположение компании добавлено.");
-        ContactsDTO contactsDTO = requisitesDTO.contactsDTO();
-        Contacts contacts = new Contacts();
-        contacts.setContactNumber(contactsDTO.contactNumber());
-        contacts.setContactPerson(contactsDTO.contactPearson());
-        contacts.setPerson(person);
-        person.setContacts(contacts);
-        log.debug("Контакты добавлены.");
-        CompanyInfoDTO companyInfoDTO = requisitesDTO.companyInfoDTO();
-        CompanyInfo companyInfo = new CompanyInfo();
-        companyInfo.setInn(companyInfoDTO.INN());
-        companyInfo.setName(companyInfoDTO.nameOfCompany());
-        companyInfo.setOgrnip(companyInfoDTO.ogrnip());
-        companyInfo.setPerson(person);
-        person.setCompanyInfo(companyInfo);
-        log.debug("Информация о компании добавлена.");
+        Person person = requisitesMapper.toPersonEntity(requisitesDTO);
         personRepository.save(person);
+        log.info("Лицо и все связанные данные успешно сохранены. ID: {}", person.getId());
     }
 }

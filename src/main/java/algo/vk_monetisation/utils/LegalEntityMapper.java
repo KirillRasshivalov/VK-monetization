@@ -4,6 +4,7 @@ import algo.vk_monetisation.dto.LegalEntityDTO;
 import algo.vk_monetisation.dto.LegalEntityResponseDTO;
 import algo.vk_monetisation.entities.LegalEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
@@ -14,4 +15,8 @@ public interface LegalEntityMapper {
     LegalEntityResponseDTO toLegalEntityResponseDTO(LegalEntity legalEntity);
 
     void updateEntity(@MappingTarget LegalEntity legalEntity, LegalEntityDTO legalEntityDTO);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "person", ignore = true)
+    LegalEntity toEntity(LegalEntityDTO dto);
 }
