@@ -1,10 +1,7 @@
 package algo.vk_monetisation.utils;
 
 import algo.vk_monetisation.dto.*;
-import algo.vk_monetisation.entities.AdvertisingCampaign;
-import algo.vk_monetisation.entities.Contacts;
-import algo.vk_monetisation.entities.Content;
-import algo.vk_monetisation.entities.LegalEntity;
+import algo.vk_monetisation.entities.*;
 import algo.vk_monetisation.exceptions.ValidationException;
 import algo.vk_monetisation.repositories.*;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +25,27 @@ public class Validator {
     private final ContactsRepository contactsRepository;
 
     private final LegalEntityRepository legalEntityRepository;
+
+    public void validatePerson(Long id, PersonDTO personDTO) {
+        if (!personRepository.findById(id).isPresent()) {
+            throw new ValidationException("Ответственное лицо не найдено.");
+        }
+        if (personDTO.surname() == null || personDTO.name() == null) {
+            throw new ValidationException("Имя и фамилия должны быть указаны.");
+        }
+    }
+
+    public void validatePerson(Long id) {
+        if (!personRepository.findById(id).isPresent()) {
+            throw new ValidationException("Ответственное лицо не найдено.");
+        }
+    }
+
+    public void validatePerson(PersonDTO personDTO)  {
+        if (personDTO.surname() == null || personDTO.name() == null) {
+            throw new ValidationException("Имя и фамилия должны быть указаны.");
+        }
+    }
 
     public void validateLegalEntity(Long id, LegalEntityDTO legalEntity) {
         if (!legalEntityRepository.existsById(id)) {
