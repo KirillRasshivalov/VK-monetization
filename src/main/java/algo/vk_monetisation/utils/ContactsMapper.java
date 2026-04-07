@@ -16,5 +16,7 @@ public interface ContactsMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "person", ignore = true)
+    @Mapping(source = "contactPerson", target = "contactPerson")
+    @Mapping(source = "contactNumber", target = "contactNumber")
     Contacts toEntity(ContactsDTO dto);
 }

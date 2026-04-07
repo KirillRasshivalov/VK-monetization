@@ -40,7 +40,7 @@ public class ContactsService {
         Person person = personRepository.findById(personId)
                 .orElseThrow(() -> new ValidationException("Person не найден: " + personId));
         Contacts newContacts = new Contacts();
-        newContacts.setContactPerson(contacts.contactPearson());
+        newContacts.setContactPerson(contacts.contactPerson());
         newContacts.setContactNumber(contacts.contactNumber());
         newContacts.setPerson(person);
         contactsRepository.save(newContacts);

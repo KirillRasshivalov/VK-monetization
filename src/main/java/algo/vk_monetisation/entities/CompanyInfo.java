@@ -18,7 +18,8 @@ public class CompanyInfo {
     @Column(unique = true, nullable = false)
     private String inn;
 
-    private String name;
+    @Column(name = "company_name")
+    private String nameOfCompany;
 
     @Column(name = "ogrnip", nullable = false)
     private String ogrnip;

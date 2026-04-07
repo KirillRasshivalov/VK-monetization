@@ -164,10 +164,9 @@ public class Validator {
         CompanyInfoDTO companyInfoDTO = requisitesDTO.companyInfoDTO();
         ContactsDTO contactsDTO = requisitesDTO.contactsDTO();
         LegalEntityDTO legalEntityDTO = requisitesDTO.legalEntityDTO();
-        validateINN(companyInfoDTO.INN());
+        validateINN(companyInfoDTO.inn());
         validateOGRNIP(companyInfoDTO.ogrnip());
         validateNumber(contactsDTO.contactNumber());
-        validateNumber(contactsDTO.contactPearson());
         validatePosIndex(legalEntityDTO.postalIndex());
     }
 

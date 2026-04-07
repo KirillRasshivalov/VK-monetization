@@ -18,7 +18,7 @@ public class RequisitesMapper {
     private final CompanyInfoMapper companyInfoMapper;
 
     public Person toPersonEntity(RequisitesDTO dto) {
-        Person person = personMapper.toEntity(dto.companyInfoDTO());
+        Person person = personMapper.toEntity(dto.personInfoDTO());
         LegalEntity legalEntity = legalEntityMapper.toEntity(dto.legalEntityDTO());
         legalEntity.setPerson(person);
         person.setLegalEntity(legalEntity);

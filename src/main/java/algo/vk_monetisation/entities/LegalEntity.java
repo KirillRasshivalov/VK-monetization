@@ -27,6 +27,6 @@ public class LegalEntity {
     private Integer apartmentNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_id", nullable = false)
+    @JoinColumn(name = "person_id")
     private Person person;
 }
