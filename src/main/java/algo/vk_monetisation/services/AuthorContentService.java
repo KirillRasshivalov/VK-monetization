@@ -43,6 +43,9 @@ public class AuthorContentService {
     @Transactional(isolation = Isolation.REPEATABLE_READ,
             rollbackFor = {Exception.class, RuntimeException.class})
     public void uploadContentForCampaign(Long campaignId, MultipartFile image, MultipartFile video) {
+        if(video == null && image == null ){
+            return;
+        }
         log.info("В сервис пришел запрос на добавление контета в кампанию.");
         validator.validateAuthorContent(campaignId, image, video);
         AdvertisingCampaign campaign = advertisingCampaignRepository.findById(campaignId).get();
@@ -75,20 +78,23 @@ public class AuthorContentService {
         content.setLikes(0L);
         content.setViews(0L);
         content.setCreatedAt(LocalDateTime.now());
-        try {
-            content.setImageData(image.getBytes());
-        } catch (Exception e) {
-            throw new ValidationException("Не удалось прочитать image байты: " + e.getMessage());
+        if(image != null) {
+            try {
+                content.setImageData(image.getBytes());
+            } catch (Exception e) {
+                throw new ValidationException("Не удалось прочитать image байты: " + e.getMessage());
+            }
+            content.setImageContentType(image.getContentType());
+            content.setImageFileName(image.getOriginalFilename());
+        }if(video != null) {
+            try {
+                content.setVideoData(video.getBytes());
+            } catch (Exception e) {
+                throw new ValidationException("Не удалось прочитать video байты: " + e.getMessage());
+            }
+            content.setVideoContentType(video.getContentType());
+            content.setVideoFileName(video.getOriginalFilename());
         }
-        content.setImageContentType(image.getContentType());
-        content.setImageFileName(image.getOriginalFilename());
-        try {
-            content.setVideoData(video.getBytes());
-        } catch (Exception e) {
-            throw new ValidationException("Не удалось прочитать video байты: " + e.getMessage());
-        }
-        content.setVideoContentType(video.getContentType());
-        content.setVideoFileName(video.getOriginalFilename());
         content.setMediaMetadata(null);
         content.setAdvertisingCampaign(campaign);
         contentRepository.save(content);

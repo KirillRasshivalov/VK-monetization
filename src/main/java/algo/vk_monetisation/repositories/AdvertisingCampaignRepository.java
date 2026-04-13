@@ -19,4 +19,8 @@ public interface AdvertisingCampaignRepository extends JpaRepository<Advertising
             "WHERE ct.advertisingCampaign.id = :campaignId")
     List<Content> findContentsByCampaignId(@Param("campaignId") Long campaignId, Pageable pageable);
 
+    @Query("SELECT COUNT(ac) FROM AdvertisingCampaign ac WHERE ac.person.id = :personId AND ac.status = :status")
+    long countByPersonIdAndStatus(@Param("personId") Long personId,
+                                  @Param("status") AdvertisingCampaign.CampaignStatus status);
+
 }
