@@ -41,7 +41,7 @@ public class AdvertisementController {
         return advertisementService.getStats(campaignId, pageNum);
     }
 
-    @GetMapping("/get_all_campaigns/{personId}")
+    @GetMapping("/all_campaigns/{personId}")
     @ResponseStatus(HttpStatus.OK)
     public List<PosevResponceDTO> getAllCampaigns(@PathVariable Long personId, @RequestParam int pageNum) {
         log.info("Пришел запрос на просмотр всех рекламных кампаний ответственного за продвижение лица.");
