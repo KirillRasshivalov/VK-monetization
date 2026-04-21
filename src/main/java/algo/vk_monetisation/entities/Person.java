@@ -27,6 +27,9 @@ public class Person {
 
     private Double balance;
 
+    @Column(name="email", unique = true)
+    private String email;
+
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CompanyInfo companyInfo;
 

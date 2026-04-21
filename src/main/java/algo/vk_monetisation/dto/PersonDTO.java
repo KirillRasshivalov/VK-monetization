@@ -4,5 +4,6 @@ public record PersonDTO(
         String name,
         String surname,
         String lastName,
+        String email,
         Double balance
 ) { }

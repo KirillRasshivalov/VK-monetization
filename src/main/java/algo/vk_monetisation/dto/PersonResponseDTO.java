@@ -7,6 +7,7 @@ public record PersonResponseDTO(
         String name,
         String surname,
         String lastName,
+        String email,
         Double balance,
         Long companyInfoId,
         Long legalEntityId,
