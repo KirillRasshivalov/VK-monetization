@@ -6,6 +6,7 @@ import algo.vk_monetisation.services.AuthorContentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ public class AuthorContentController {
 
     @GetMapping("/get_all_content_campaigns/{campaignId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public List<ContentResponseDTO> getAllCampaignsContent(@PathVariable Long campaignId, @RequestParam int pageNum) {
         log.info("Пришел запрос на получение всего контента одной рекламной кампании: " + campaignId);
         return authorContentService.getAllContentFromCampaign(campaignId, pageNum);
@@ -28,6 +30,7 @@ public class AuthorContentController {
 
     @PutMapping("/update_content/{contentId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void updateContent(@PathVariable Long contentId, @RequestBody ContentDTO contentDTO) {
         log.info("Пришел запрос на обновление контента.");
         authorContentService.updateContent(contentId, contentDTO);
@@ -35,6 +38,7 @@ public class AuthorContentController {
 
     @DeleteMapping("/delete_content/{contentId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void deleteContent(@PathVariable Long contentId) {
         log.info("Пришел запрос на удаление контента.");
         authorContentService.deleteContent(contentId);
@@ -42,6 +46,7 @@ public class AuthorContentController {
 
     @PostMapping("/content")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void uploadContent(
             @RequestParam("campaignId") Long campaignId,
             @RequestParam(value = "image", required = false) MultipartFile image,

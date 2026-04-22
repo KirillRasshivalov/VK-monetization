@@ -16,12 +16,14 @@ public interface PersonMapper {
     @Mapping(target = "legalEntity", ignore = true)
     @Mapping(target = "contacts", ignore = true)
     @Mapping(target = "companyInfo", ignore = true)
+    @Mapping(source="email", target="email")
     Person toEntity(PersonInfoDTO dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "legalEntity", ignore = true)
     @Mapping(target = "contacts", ignore = true)
     @Mapping(target = "companyInfo", ignore = true)
+    @Mapping(source="email", target="email")
     Person toEntity(PersonDTO personDTO);
 
     PersonResponseDTO toDTO(Person person);
