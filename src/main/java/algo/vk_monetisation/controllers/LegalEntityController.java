@@ -6,6 +6,7 @@ import algo.vk_monetisation.services.LegalEntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class LegalEntityController {
 
     @PostMapping("/create_leegal_entities")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void createLegalEntity(@RequestBody LegalEntityDTO legalEntityDTO) {
         log.info("Пришел запрос на добавление информации о компании.");
         legalEntityService.createLegalEntity(legalEntityDTO);
@@ -25,6 +27,7 @@ public class LegalEntityController {
 
     @GetMapping("/get_legal_entity/{legalId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public LegalEntityResponseDTO getLegalEntity(@PathVariable Long legalId) {
         log.info("Пришел запрос на показ информации о компании.");
         return legalEntityService.getLegalEntity(legalId);
@@ -32,6 +35,7 @@ public class LegalEntityController {
 
     @PutMapping("/update_legal_entity/{legalId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void updateLegalEntity(@PathVariable Long legalId, @RequestBody LegalEntityDTO legalEntityDTO) {
         log.info("Пришел запрос на обновление информации о компании.");
         legalEntityService.updateLegalEntity(legalId, legalEntityDTO);
@@ -39,6 +43,7 @@ public class LegalEntityController {
 
     @DeleteMapping("/delete_legal_entity/{legalId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void deleteLegalEntity(@PathVariable Long legalId) {
         log.info("Пришел запрос на удаление информации о компании.");
         legalEntityService.deleteLegalEntity(legalId);

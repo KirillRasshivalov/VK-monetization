@@ -5,6 +5,7 @@ import algo.vk_monetisation.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class WalletController {
 
     @PostMapping("/topup")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('MODERATOR')")
     public void topUp(@RequestBody WalletTopUpDTO dto) {
         log.info("Запрос на пополнение баланса для personId={}", dto.personId());
         walletService.uppBalance(dto);

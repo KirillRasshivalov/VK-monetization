@@ -38,7 +38,7 @@ public class JwtUtil {
                 .subject(userPrincipal.getEmail())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .claim("role", userPrincipal.getUserRole())
+                .claim("role", userPrincipal.getRole())
                 .claim("email", userPrincipal.getEmail())
                 .claim("userId", userPrincipal.getId())
                 .signWith(key(), SignatureAlgorithm.HS256)

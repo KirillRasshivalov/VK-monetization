@@ -27,7 +27,7 @@ public class Person {
 
     private Double balance;
 
-    @Column(name="email", unique = true)
+    @Column(unique = true)
     private String email;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
