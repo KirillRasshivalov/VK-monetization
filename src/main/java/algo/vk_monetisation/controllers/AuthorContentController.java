@@ -1,5 +1,6 @@
 package algo.vk_monetisation.controllers;
 
+import algo.vk_monetisation.dto.CampaignActivationLedgerEntryDTO;
 import algo.vk_monetisation.dto.ContentDTO;
 import algo.vk_monetisation.dto.ContentResponseDTO;
 import algo.vk_monetisation.services.AuthorContentService;
@@ -54,6 +55,13 @@ public class AuthorContentController {
     ) {
         log.info("Запрос на загрузку контента для кампании {}", campaignId);
         authorContentService.uploadContentForCampaign(campaignId, image, video);
+    }
+
+    @GetMapping("/activation-ledger/{campaignId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CampaignActivationLedgerEntryDTO> getActivationLedger(@PathVariable Long campaignId) {
+        log.info("Запрос на чтение ledger активации кампании {}", campaignId);
+        return authorContentService.getCampaignActivationLedger(campaignId);
     }
 }
 
