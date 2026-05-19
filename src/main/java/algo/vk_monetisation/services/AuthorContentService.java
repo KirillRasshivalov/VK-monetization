@@ -6,6 +6,7 @@ import algo.vk_monetisation.dto.ContentResponseDTO;
 import algo.vk_monetisation.entities.AdvertisingCampaign;
 import algo.vk_monetisation.entities.Content;
 import algo.vk_monetisation.exceptions.ValidationException;
+import algo.vk_monetisation.messaging.CampaignAsyncMessagingService;
 import algo.vk_monetisation.repositories.AdvertisingCampaignRepository;
 import algo.vk_monetisation.repositories.ContentRepository;
 import algo.vk_monetisation.repositories.PersonRepository;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +49,8 @@ public class AuthorContentService {
 
     private final CampaignActivationLedgerService campaignActivationLedgerService;
 
+    private final CampaignAsyncMessagingService campaignAsyncMessagingService;
+
     @Value("${app.tx.campaign-activation-duration-minutes:4}")
     private long activationDurationMinutes;
 
@@ -66,11 +71,16 @@ public class AuthorContentService {
         txTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         txTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
 
+        final boolean[] activatedNow = {false};
+        final Long[] savedContentId = {null};
+        final Long[] savedPersonId = {null};
+
         txTemplate.executeWithoutResult(status -> {
             AdvertisingCampaign campaign = advertisingCampaignRepository.findById(campaignId)
                     .orElseThrow(() -> new ValidationException("Кампания не найдена: " + campaignId));
 
             if (campaign.getStatus() == null || campaign.getStatus() == AdvertisingCampaign.CampaignStatus.DRAFT) {
+                activatedNow[0] = true;
                 var person = campaign.getPerson();
                 Double balance = person.getBalance() != null ? person.getBalance() : 0.0;
                 Double required = campaign.getBudget() != null ? campaign.getBudget() : 0.0;
@@ -138,7 +148,19 @@ public class AuthorContentService {
 //                throw new ValidationException("Симуляция падения после записи в ledger для проверки distributed rollback.");
 //            }
 
+            savedContentId[0] = content.getId();
+            savedPersonId[0] = campaign.getPerson().getId();
             log.info("Контент загружен для кампании {} (contentId={})", campaignId, content.getId());
+
+            if (activatedNow[0] && TransactionSynchronizationManager.isSynchronizationActive()) {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        campaignAsyncMessagingService.publishActivated(
+                                campaignId, savedContentId[0], savedPersonId[0]);
+                    }
+                });
+            }
         });
     }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connector xmlns="https://jakarta.ee/xml/ns/jakartaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/connector_2_1.xsd"
+           version="2.1">
+    <description>VK Monetisation EIS (DaData + SMS.ru)</description>
+    <vendor-name>ITMO BPLS</vendor-name>
+    <eis-type>Custom</eis-type>
+    <resourceadapter-version>1.0</resourceadapter-version>
+    <license>
+        <description>Educational use</description>
+        <license-required>false</license-required>
+    </license>
+    <resourceadapter>
+        <resourceadapter-class>algo.vk_monetisation.eis.jca.VkEisResourceAdapter</resourceadapter-class>
+        <outbound-resourceadapter>
+            <connection-definition>
+                <managedconnectionfactory-class>algo.vk_monetisation.eis.jca.dadata.DadataManagedConnectionFactory</managedconnectionfactory-class>
+                <connectionfactory-interface>algo.vk_monetisation.eis.jca.dadata.DadataConnectionFactory</connectionfactory-interface>
+                <connectionfactory-impl-class>algo.vk_monetisation.eis.jca.dadata.DadataConnectionFactoryImpl</connectionfactory-impl-class>
+                <connection-interface>algo.vk_monetisation.eis.jca.dadata.DadataConnection</connection-interface>
+                <connection-impl-class>algo.vk_monetisation.eis.jca.dadata.DadataConnectionImpl</connection-impl-class>
+            </connection-definition>
+            <connection-definition>
+                <managedconnectionfactory-class>algo.vk_monetisation.eis.jca.smsru.SmsRuManagedConnectionFactory</managedconnectionfactory-class>
+                <connectionfactory-interface>algo.vk_monetisation.eis.jca.smsru.SmsRuConnectionFactory</connectionfactory-interface>
+                <connectionfactory-impl-class>algo.vk_monetisation.eis.jca.smsru.SmsRuConnectionFactoryImpl</connectionfactory-impl-class>
+                <connection-interface>algo.vk_monetisation.eis.jca.smsru.SmsRuConnection</connection-interface>
+                <connection-impl-class>algo.vk_monetisation.eis.jca.smsru.SmsRuConnectionImpl</connection-impl-class>
+            </connection-definition>
+        </outbound-resourceadapter>
+    </resourceadapter>
+</connector>

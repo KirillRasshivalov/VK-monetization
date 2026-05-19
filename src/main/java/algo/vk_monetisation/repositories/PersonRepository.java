@@ -18,4 +18,10 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
             "LEFT JOIN FETCH ac.person " +
             "WHERE ac.person.id = :personId")
     List<AdvertisingCampaign> findAdvertisingCampaignsByPersonId(@Param("personId") Long id, Pageable pageable);
+
+    @Query("SELECT p FROM Person p " +
+            "LEFT JOIN FETCH p.companyInfo " +
+            "LEFT JOIN FETCH p.contacts " +
+            "WHERE p.id = :id")
+    Optional<Person> findWithDetailsById(@Param("id") Long id);
 }

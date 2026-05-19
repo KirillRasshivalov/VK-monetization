@@ -13,6 +13,11 @@ public interface AdvertisingCampaignRepository extends JpaRepository<Advertising
 
     List<AdvertisingCampaign> findByStatus(AdvertisingCampaign.CampaignStatus status);
 
+    @Query("SELECT DISTINCT c FROM AdvertisingCampaign c " +
+            "LEFT JOIN FETCH c.content " +
+            "LEFT JOIN FETCH c.person " +
+            "WHERE c.status = :status")
+    List<AdvertisingCampaign> findByStatusWithContent(@Param("status") AdvertisingCampaign.CampaignStatus status);
 
     @Query("SELECT DISTINCT ct FROM Content ct " +
             "LEFT JOIN FETCH ct.advertisingCampaign " +
