@@ -1,8 +1,8 @@
 package algo.vk_monetisation.config;
 
-import algo.vk_monetisation.jca.connection.FnsConnectionFactory;
-import algo.vk_monetisation.jca.connection.FnsConnectionFactoryImpl;
-import algo.vk_monetisation.jca.connection.FnsManagedConnectionFactory;
+import algo.vk_monetisation.jca.FnsConnectionFactory;
+import algo.vk_monetisation.jca.FnsConnectionFactoryImpl;
+import algo.vk_monetisation.jca.FnsManagedConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
