@@ -1,4 +1,4 @@
-package algo.vk_monetisation.jca.connection;
+package algo.vk_monetisation.jca;
 
 import jakarta.resource.ResourceException;
 

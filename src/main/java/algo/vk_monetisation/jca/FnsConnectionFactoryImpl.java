@@ -1,4 +1,4 @@
-package algo.vk_monetisation.jca.connection;
+package algo.vk_monetisation.jca;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
