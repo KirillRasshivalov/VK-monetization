@@ -26,6 +26,12 @@ public class LegalEntity {
     @Column(name = "apartment_number")
     private Integer apartmentNumber;
 
+    @Column(name = "inn", unique = true, nullable = false)
+    private String inn;
+
+    @Column(name = "inn_verification_status")
+    private String innVerificationStatus = "PENDING";
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     private Person person;

@@ -7,5 +7,6 @@ public record LegalEntityDTO(
         String town,
         String street,
         String address,
-        Integer apartmentNumber
+        Integer apartmentNumber,
+        String inn
 ) { }
