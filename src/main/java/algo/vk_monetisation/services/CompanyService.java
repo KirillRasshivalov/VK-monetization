@@ -21,8 +21,6 @@ public class CompanyService {
 
     private final UserRepository userRepository;
 
-    private final Validator validator;
-
     private final RequisitesMapper requisitesMapper;
 
     private final UserService userService;
@@ -30,7 +28,6 @@ public class CompanyService {
     @Transactional
     public AuthResponseDTO addCompany(RequisitesDTO requisitesDTO) {
         log.info("Команда на создание ответственного за компанию передана в сервис.");
-        log.info("ИМЕЙЛ: " + requisitesDTO.personInfoDTO().email());
         Person person = requisitesMapper.toPersonEntity(requisitesDTO);
         personRepository.save(person);
         log.info("Имейл: " + person.getEmail());

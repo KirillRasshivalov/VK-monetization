@@ -65,7 +65,8 @@ public class UserService {
         if (authRequestDTO.getEmail() == null || authRequestDTO.getPassword() == null) {
             throw new ValidationException("Отсутствует пароль или email.");
         }
-        if (!passwordEncoder.matches(authRequestDTO.getPassword(), userRepository.findByEmail(authRequestDTO.getEmail()).getPassword())) {
+        User foundUser = userRepository.findByEmail(authRequestDTO.getEmail());
+        if (foundUser == null || !passwordEncoder.matches(authRequestDTO.getPassword(), foundUser.getPassword())) {
             throw new ValidationException("Неверный логин или пароль.");
         }
         Authentication authentication = authenticationManager.authenticate(
