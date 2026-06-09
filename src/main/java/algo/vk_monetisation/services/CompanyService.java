@@ -25,9 +25,17 @@ public class CompanyService {
 
     private final UserService userService;
 
+    private final InnVerificationService innVerificationService;
+
     @Transactional
     public AuthResponseDTO addCompany(RequisitesDTO requisitesDTO) {
         log.info("Команда на создание ответственного за компанию передана в сервис.");
+        log.info("Проверка ИНН компании: " + requisitesDTO.companyInfoDTO().inn());
+        if (!innVerificationService.verifyInn(requisitesDTO.companyInfoDTO().inn())) {
+            log.error("Некорректный ИНН: " + requisitesDTO.companyInfoDTO().inn());
+            throw new IllegalArgumentException("Некорректный ИНН: " + requisitesDTO.companyInfoDTO().inn());
+        }
+        log.info("Проверка ИНН прошла успешно");
         Person person = requisitesMapper.toPersonEntity(requisitesDTO);
         personRepository.save(person);
         log.info("Имейл: " + person.getEmail());
