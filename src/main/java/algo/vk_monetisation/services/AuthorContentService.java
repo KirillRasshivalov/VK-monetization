@@ -134,9 +134,9 @@ public class AuthorContentService {
                     campaign.getStatus().name()
             );
 
-//            if (simulateLedgerFailure) {
-//                throw new ValidationException("Симуляция падения после записи в ledger для проверки distributed rollback.");
-//            }
+            if (simulateLedgerFailure) {
+                throw new ValidationException("Симуляция падения после записи в ledger для проверки distributed rollback.");
+            }
 
             log.info("Контент загружен для кампании {} (contentId={})", campaignId, content.getId());
         });

@@ -1,6 +1,5 @@
 package algo.vk_monetisation.jca;
 
-import jakarta.resource.ResourceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,9 +11,9 @@ public class FnsConnectionImpl implements FnsConnection {
     private boolean closed = false;
 
     @Override
-    public String verifyInn(String inn) throws ResourceException {
+    public String verifyInn(String inn) {
         if (closed) {
-            throw new ResourceException("Соединение закрыто");
+            throw new RuntimeException("Соединение закрыто");
         }
         log.info("FnsConnectionImpl: проверка ИНН {}", inn);
         return managedConnection.verifyInn(inn);

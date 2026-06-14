@@ -24,6 +24,12 @@ public class CompanyInfo {
     @Column(name = "ogrnip", nullable = false)
     private String ogrnip;
 
+    @Column(name = "inn_primary_dadata_ok")
+    private Boolean innPrimaryDadataOk = false;
+
+    @Column(name = "inn_secondary_dadata_ok")
+    private Boolean innSecondaryDadataOk = false;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;

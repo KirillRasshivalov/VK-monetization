@@ -1,0 +1,97 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+
+  postgres:
+    image: postgres:14
+    command: ["postgres", "-c", "max_prepared_transactions=100"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./docker/initdb:/docker-entrypoint-initdb.d
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  wildfly-node-1:
+    build:
+      context: .
+      dockerfile: docker/wildfly/Dockerfile
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB_MAIN: advertising_db
+      POSTGRES_DB_LEDGER: advertising_db_ledger
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      SPRING_PROFILES_ACTIVE: wildfly
+      CLUSTER_NODE_ID: node-1
+      APP_CLUSTER_REGISTRATION_INN_PRIMARY_LISTENER_ENABLED: true
+      APP_CLUSTER_REGISTRATION_INN_SECONDARY_LISTENER_ENABLED: false
+      APP_TX_SIMULATE_LEDGER_FAILURE: ${APP_TX_SIMULATE_LEDGER_FAILURE:-false}
+      JWT_SECRET: ThisIsAVeryLongJWTSecretForDockerLab1234567890
+    depends_on:
+      - postgres
+      - kafka
+    ports:
+      - "8080:8080"
+      - "9990:9990"
+    volumes:
+      - ./target/VK_monetisation-0.0.1-SNAPSHOT.war:/opt/jboss/wildfly/standalone/deployments/VK_monetisation-0.0.1-SNAPSHOT.war:ro
+
+  wildfly-node-2:
+    build:
+      context: .
+      dockerfile: docker/wildfly/Dockerfile
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB_MAIN: advertising_db
+      POSTGRES_DB_LEDGER: advertising_db_ledger
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      KAFKA_HOST: kafka
+      KAFKA_PORT: 29092
+      SPRING_PROFILES_ACTIVE: wildfly
+      CLUSTER_NODE_ID: node-2
+      APP_CLUSTER_REGISTRATION_INN_PRIMARY_LISTENER_ENABLED: false
+      APP_CLUSTER_REGISTRATION_INN_SECONDARY_LISTENER_ENABLED: true
+      APP_TX_SIMULATE_LEDGER_FAILURE: ${APP_TX_SIMULATE_LEDGER_FAILURE:-false}
+      JWT_SECRET: ThisIsAVeryLongJWTSecretForDockerLab1234567890
+    depends_on:
+      - postgres
+      - kafka
+    ports:
+      - "8180:8080"
+      - "9991:9990"
+    volumes:
+      - ./target/VK_monetisation-0.0.1-SNAPSHOT.war:/opt/jboss/wildfly/standalone/deployments/VK_monetisation-0.0.1-SNAPSHOT.war:ro
+
+volumes:
+  pg_data:

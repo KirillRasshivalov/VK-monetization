@@ -182,17 +182,17 @@ public class Validator {
         CompanyInfoDTO companyInfoDTO = requisitesDTO.companyInfoDTO();
         ContactsDTO contactsDTO = requisitesDTO.contactsDTO();
         LegalEntityDTO legalEntityDTO = requisitesDTO.legalEntityDTO();
-        validateINN(companyInfoDTO.inn());
+//        validateINN(companyInfoDTO.inn());
         validateOGRNIP(companyInfoDTO.ogrnip());
         validateNumber(contactsDTO.contactNumber());
         validatePosIndex(legalEntityDTO.postalIndex());
     }
 
-    private void validateINN(String INN) {
-        if (INN.toString().length() != 12) {
-            throw new ValidationException("INN должен быть 12 цифр.");
-        }
-    }
+//    private void validateINN(String INN) {
+//        if (INN.toString().length() != 12 || INN.toString().length() != 10) {
+//            throw new ValidationException("INN должен быть 12 цифр.");
+//        }
+//    }
 
     private void validateOGRNIP(String OGRNIP) {
         if (OGRNIP.length() != 15) {

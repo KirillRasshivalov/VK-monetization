@@ -1,11 +1,9 @@
 package algo.vk_monetisation.jca;
 
-import jakarta.resource.ResourceException;
+public interface FnsConnection extends AutoCloseable {
 
-public interface FnsConnection {
+    String verifyInn(String inn);
 
-    String verifyInn(String inn) throws ResourceException;
-
+    @Override
     void close();
 }
-
